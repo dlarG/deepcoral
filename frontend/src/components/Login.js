@@ -87,7 +87,7 @@ function Login() {
   );
 }
 
-// Basic styling - you can enhance this further
+// Alisdi rani poy
 const styles = {
   container: {
     maxWidth: "400px",
