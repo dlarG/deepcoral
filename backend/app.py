@@ -90,14 +90,13 @@ def login_user():
         if conn is None:
             return jsonify({"error": "Database connection failed"}), 500
             
-        with conn.cursor() as cur:  # Using context manager
+        with conn.cursor() as cur:  
             cur.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = cur.fetchone()
             
             if not user or not check_password_hash(user[2], password):
                 return jsonify({'error': 'Invalid credentials'}), 401
                 
-            # Don't return sensitive data
             user_data = {
                 'username': user[1],
                 'firstname': user[3],
@@ -111,7 +110,6 @@ def login_user():
             }), 200
             
     except Exception as e:
-        # Log the actual error for debugging
         app.logger.error(f"Login error: {str(e)}")
         return jsonify({'error': 'Login failed'}), 500
         
