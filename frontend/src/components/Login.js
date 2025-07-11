@@ -1,7 +1,9 @@
-// src/components/Login.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+// Configure axios to send credentials with requests
+axios.defaults.withCredentials = true;
 
 function Login() {
   const [form, setForm] = useState({
@@ -10,7 +12,21 @@ function Login() {
   });
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [csrfToken, setCsrfToken] = useState("");
   const navigate = useNavigate();
+
+  // Fetch CSRF token when component mounts
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/csrf-token");
+        setCsrfToken(response.data.csrf_token);
+      } catch (err) {
+        console.error("Error fetching CSRF token:", err);
+      }
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,7 +38,12 @@ function Login() {
     setMessage("");
 
     try {
-      const res = await axios.post("http://localhost:5000/login", form);
+      const res = await axios.post("http://localhost:5000/login", form, {
+        headers: {
+          "X-CSRF-Token": csrfToken,
+        },
+      });
+
       setMessage(res.data.message);
       setForm((prev) => ({ ...prev, password: "" })); // Clear password
 
@@ -61,6 +82,7 @@ function Login() {
         </p>
       )}
       <form onSubmit={handleSubmit} style={styles.form}>
+        <input type="hidden" name="csrf_token" value={csrfToken} />
         <input
           style={styles.input}
           type="text"
@@ -78,6 +100,7 @@ function Login() {
           value={form.password}
           onChange={handleChange}
           required
+          minLength="8"
         />
         <button type="submit" disabled={isLoading} style={styles.button}>
           {isLoading ? "Logging in..." : "Login"}
