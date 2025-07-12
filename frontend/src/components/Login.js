@@ -74,54 +74,81 @@ function Login() {
   };
 
   return (
-    <div className="login-container" style={styles.container}>
-      <h2 style={styles.title}>Login</h2>
-      {message && (
-        <p style={message.includes("success") ? styles.success : styles.error}>
-          {message}
-        </p>
-      )}
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <input type="hidden" name="csrf_token" value={csrfToken} />
-        <input
-          style={styles.input}
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          style={styles.input}
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          minLength="8"
-        />
-        <button type="submit" disabled={isLoading} style={styles.button}>
-          {isLoading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+    <div style={styles.pageWrapper}>
+      <div style={styles.container}>
+        <h2 style={styles.title}>Welcome Back</h2>
+
+        {message && (
+          <p style={message.toLowerCase().includes("success") ? styles.success : styles.error}>
+            {message}
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <input type="hidden" name="csrf_token" value={csrfToken} />
+
+          <input
+            style={styles.input}
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            style={styles.input}
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            minLength="8"
+          />
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            style={isLoading ? { ...styles.button, ...styles.buttonDisabled } : styles.button}
+          >
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
+
+          <p style={styles.redirectText}>
+            Don’t have an account? <a href="/register" style={styles.link}>Register here</a>
+          </p>
+        </form>
+      </div>
     </div>
   );
+
 }
 
-// Alisdi rani poy
+// na alisdan na rald
 const styles = {
-  container: {
-    maxWidth: "400px",
-    margin: "0 auto",
+  pageWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "#f0f4f8",
     padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+  },
+  container: {
+    width: "100%",
+    maxWidth: "400px",
+    background: "#ffffff",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
   },
   title: {
     textAlign: "center",
-    color: "#333",
+    marginBottom: "20px",
+    fontSize: "24px",
+    color: "#2c3e50",
   },
   form: {
     display: "flex",
@@ -129,32 +156,49 @@ const styles = {
     gap: "15px",
   },
   input: {
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ddd",
-    fontSize: "16px",
+    padding: "12px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "15px",
+    outline: "none",
   },
   button: {
-    padding: "10px",
-    backgroundColor: "#4CAF50",
+    padding: "12px",
+    backgroundColor: "#3498db",
     color: "white",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "6px",
     cursor: "pointer",
     fontSize: "16px",
+    fontWeight: "bold",
   },
   buttonDisabled: {
-    backgroundColor: "#cccccc",
+    backgroundColor: "#95a5a6",
     cursor: "not-allowed",
   },
   success: {
-    color: "green",
+    color: "#27ae60",
     textAlign: "center",
+    fontWeight: "bold",
+    marginBottom: "10px",
   },
   error: {
-    color: "red",
+    color: "#e74c3c",
     textAlign: "center",
+    fontWeight: "bold",
+    marginBottom: "10px",
+  },
+  redirectText: {
+    marginTop: "10px",
+    textAlign: "center",
+    fontSize: "14px",
+    color: "#7f8c8d",
+  },
+  link: {
+    color: "#3498db",
+    textDecoration: "none",
   },
 };
+
 
 export default Login;
